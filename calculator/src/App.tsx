@@ -15,11 +15,22 @@ function App() {
   const [display,setDisplay] = useState("0");
   const [equation,setEquation] = useState<Equation>({});
   const [override,setOverride] = useState(true);
+  const [serverId,setServerId] = useState(0);
   const popMemory = () => {
-
+    const get = async () => {
+      let resp = await fetch('/api/pop',{method:'POST',body:serverId.toString()});
+      let text = await resp.text();
+      setDisplay(text);
+    }
+    get();
   }
   const storeInMemory = () => {
-
+    const post = async () => {
+      let resp = await fetch('/api/store',{method:'POST',body:display.toString()});
+      let text = await resp.text();
+      setServerId(Number.parseInt(text));
+    }
+    post();
   }
   const plusMinusClick = () => {
     if(display.startsWith('-')) {
@@ -142,6 +153,14 @@ function App() {
     }
   }, [display])
 
+  const docKeyDown = (event : KeyboardEvent) => {
+    
+  }
+
+  useEffect(()=> {
+    window.addEventListener('keydown',docKeyDown);
+    return window.removeEventListener('keydown',  docKeyDown);
+  },[])
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       return (
@@ -149,7 +168,7 @@ function App() {
       )
     }))
   }
-
+  
   return (
     <>
       <div className="grid">
