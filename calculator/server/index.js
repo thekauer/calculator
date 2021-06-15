@@ -1,28 +1,27 @@
 "use strict";
-let express = require("express");
+const express = require("express");
 const fs = require('fs');
 const bodyParser = require('body-parser');
-let app = express();
+const session = require('express-session');
+const app = express();
 
-app.use(bodyParser.text())
 
-let users = 0;
-let memory = [];
+app.use(bodyParser.text());
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  }))
+
 app.post('/api/store', (req, res) => {
     const number = req.body;
-    console.log('store',number);
-    users++;
-    memory[users]=number;
     res.send(users.toString());
 });
 
-app.post('/api/pop', (req, res) => {
-    const id = req.body;
-    console.log('pop for: ',id);
-    const number = memory[id];
+app.get('/api/pop', (req, res) => {
     if(number) {
         res.status(200).send(number.toString());
-        memory[id]=undefined;
     } else {
         res.status(400).send();
     }

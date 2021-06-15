@@ -15,12 +15,13 @@ function App() {
   const [display,setDisplay] = useState("0");
   const [equation,setEquation] = useState<Equation>({});
   const [override,setOverride] = useState(true);
-  const [serverId,setServerId] = useState(0);
   const popMemory = () => {
     const get = async () => {
-      let resp = await fetch('/api/pop',{method:'POST',body:serverId.toString()});
+      let resp = await fetch('/api/pop');
       let text = await resp.text();
-      setDisplay(text);
+      if(resp.status===200) {
+        setDisplay(text);
+      }
     }
     get();
   }
@@ -28,7 +29,7 @@ function App() {
     const post = async () => {
       let resp = await fetch('/api/store',{method:'POST',body:display.toString()});
       let text = await resp.text();
-      setServerId(Number.parseInt(text));
+      
     }
     post();
   }
@@ -152,7 +153,6 @@ function App() {
       setDisplay(display.substr(1));
     }
   }, [display])
-
   const docKeyDown = (event : KeyboardEvent) => {
     
   }
