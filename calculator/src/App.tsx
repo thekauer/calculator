@@ -12,10 +12,17 @@ function App() {
   const [equation,setEquation] = useState<Equation>({});
   const [override,setOverride] = useState(true);
   const peekMemory = () => {
-
+    
   }
   const storeInMemory = () => {
 
+  }
+  const plusMinusClick = () => {
+    if(display.startsWith('-')) {
+      setDisplay(display.substr(1));
+    } else {
+      setDisplay('-'+display);
+    }
   }
   const clearDisplay = () => {
     if(display==="0") {
@@ -118,9 +125,9 @@ function App() {
       { text: "+", fn: operatorClick("+") }
     ],
     [
-      { text: "±", fn: () => {} },
+      { text: "±", fn: plusMinusClick },
       { text: "0", fn: addToDisplay("0") },
-      { text: ",", fn: addToDisplay(",") },
+      { text: ",", fn: addToDisplay(".") },
       { text: "=", fn: equalsClick }
     ]
   ]
