@@ -26,7 +26,7 @@ describe('test layout', () => {
     expect(bottom.innerHTML).toBe("0");
     const one = getByText(/1/);
     one.click();
-    expect(bottom.innerHTML).toBe("01");
+    expect(bottom.innerHTML).toBe("1");
 
   })
 })
@@ -46,7 +46,7 @@ describe('test addition', () => {
     expect(top.innerHTML).toBe('1+');
     one.click();
     expect(top.innerHTML).toBe('1+');
-    expect(bottom.innerHTML).toBe('01');
+    expect(bottom.innerHTML).toBe('1');
     eq.click();
     expect(top.innerHTML).toBe(" ");
     expect(bottom.innerHTML).toBe('2');
@@ -85,7 +85,7 @@ describe('substraction', () => {
     expect(top.innerHTML).toBe('1-');
     two.click();
     expect(top.innerHTML).toBe('1-');
-    expect(bottom.innerHTML).toBe('02');
+    expect(bottom.innerHTML).toBe('2');
     eq.click();
     expect(top.innerHTML).toBe(" ");
     expect(bottom.innerHTML).toBe('-1');
