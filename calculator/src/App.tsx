@@ -5,14 +5,18 @@ interface Equation {
   lhs?:number;
   op?:string
 }
-
+enum ButtonType {
+  OPERATOR='operator',
+  NUMBER = 'number',
+  OTHER = 'other'
+}
 function App() {
   const [history,setHistory] = useState("");
   const [display,setDisplay] = useState("0");
   const [equation,setEquation] = useState<Equation>({});
   const [override,setOverride] = useState(true);
-  const peekMemory = () => {
-    
+  const popMemory = () => {
+
   }
   const storeInMemory = () => {
 
@@ -101,34 +105,34 @@ function App() {
 
   const buttons = [
     [
-      { text: "M-", fn: peekMemory },
-      { text: "M+", fn: storeInMemory },
-      { text: "C", fn: clearDisplay },
-      { text: "÷", fn: operatorClick("÷") }
+      { text: "M-", fn: popMemory, type:ButtonType.OTHER },
+      { text: "M+", fn: storeInMemory, type:ButtonType.OTHER },
+      { text: "C", fn: clearDisplay, type:ButtonType.OTHER },
+      { text: "÷", fn: operatorClick("÷"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "7", fn: addToDisplay("7") },
-      { text: "8", fn: addToDisplay("8") },
-      { text: "9", fn: addToDisplay("9") },
-      { text: "×", fn: operatorClick("×") }
+      { text: "7", fn: addToDisplay("7"), type:ButtonType.NUMBER },
+      { text: "8", fn: addToDisplay("8"), type:ButtonType.NUMBER },
+      { text: "9", fn: addToDisplay("9"), type:ButtonType.NUMBER },
+      { text: "×", fn: operatorClick("×"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "4", fn: addToDisplay("4") },
-      { text: "5", fn: addToDisplay("5") },
-      { text: "6", fn: addToDisplay("6") },
-      { text: "-", fn: operatorClick("-") }
+      { text: "4", fn: addToDisplay("4"), type:ButtonType.NUMBER },
+      { text: "5", fn: addToDisplay("5"), type:ButtonType.NUMBER },
+      { text: "6", fn: addToDisplay("6"), type:ButtonType.NUMBER },
+      { text: "-", fn: operatorClick("-"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "1", fn: addToDisplay("1") },
-      { text: "2", fn: addToDisplay("2") },
-      { text: "3", fn: addToDisplay("3") },
-      { text: "+", fn: operatorClick("+") }
+      { text: "1", fn: addToDisplay("1"), type:ButtonType.NUMBER },
+      { text: "2", fn: addToDisplay("2"), type:ButtonType.NUMBER },
+      { text: "3", fn: addToDisplay("3"), type:ButtonType.NUMBER },
+      { text: "+", fn: operatorClick("+"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "±", fn: plusMinusClick },
-      { text: "0", fn: addToDisplay("0") },
-      { text: ",", fn: addToDisplay(".") },
-      { text: "=", fn: equalsClick }
+      { text: "±", fn: plusMinusClick, type:ButtonType.OTHER },
+      { text: "0", fn: addToDisplay("0"), type:ButtonType.NUMBER },
+      { text: ",", fn: addToDisplay("."), type:ButtonType.OTHER },
+      { text: "=", fn: equalsClick, type:ButtonType.OPERATOR }
     ]
   ]
 
@@ -141,7 +145,7 @@ function App() {
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       return (
-        <button key={row*4+col} style={{ gridRow: row + 1 + 2, gridColumn: col + 1 }} onClick={button.fn}>{button.text}</button>
+        <button key={row*4+col} className={button.type?.toString()} style={{ gridRow: row + 1 + 2, gridColumn: col + 1 }} onClick={button.fn}>{button.text}</button>
       )
     }))
   }
