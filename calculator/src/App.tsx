@@ -15,42 +15,7 @@ function App() {
   const [display,setDisplay] = useState("0");
   const [equation,setEquation] = useState<Equation>({});
   const [override,setOverride] = useState(true);
-  const popMemory = () => {
-    const get = async () => {
-      let resp = await fetch('/api/pop');
-      let text = await resp.text();
-      if(resp.status===200) {
-        setDisplay(text);
-      }
-    }
-    get();
-  }
-  const storeInMemory = () => {
-    const post = async () => {
-      let resp = await fetch('/api/store',{method:'POST',body:display.toString()});
-      let text = await resp.text();
-      
-    }
-    post();
-  }
-  const plusMinusClick = () => {
-    if(display.startsWith('-')) {
-        setDisplay(display.substr(1));
-    } else {
-      if(display==='0') {
-        setDisplay('-');
-      } else {
-      setDisplay('-'+display);
-      }
-    }
-  }
-  const clearDisplay = () => {
-    if(display==="0") {
-      setHistory(" ");
-    } else {
-      setDisplay("0");
-    }
-  }
+
   const evalDisplay = () => {
     if(override) return;
     const rhs = Number.parseFloat(display);
@@ -81,7 +46,52 @@ function App() {
       return result;
     }
   }
-  const addToDisplay = (s: string) => {
+  const popMemoryClick = () => {
+    const get = async () => {
+      let resp = await fetch('/api/pop');
+      let text = await resp.text();
+      if(resp.status===200) {
+        setDisplay(text);
+      }
+    }
+    get();
+  }
+  const storeInMemoryClick = () => {
+    const post = async () => {
+      let resp = await fetch('/api/store',{method:'POST',body:display.toString()});
+      let text = await resp.text();
+      
+    }
+    post();
+  }
+  const plusMinusClick = () => {
+    if(display.startsWith('-')) {
+        setDisplay(display.substr(1));
+    } else {
+      if(display==='0') {
+        setDisplay('-');
+      } else {
+      setDisplay('-'+display);
+      }
+    }
+  }
+  const clearDisplayClick = () => {
+    if(display==="0") {
+      setHistory(" ");
+      setEquation({});
+    } else {
+      setDisplay("0");
+    }
+  }
+  const equalsClick = () => {
+    if(display==='') return;
+    const result = evalDisplay();
+    if(result) {
+      setDisplay(result.toString());
+      setEquation({});
+    }
+  }
+  const addToDisplayFor = (s: string) => {
     return () => {
       if(override || display==='0') {
         setDisplay(s);
@@ -91,7 +101,7 @@ function App() {
       }
     }
   }
-  const operatorClick = (op : string) => {
+  const operatorClickFor = (op : string) => {
     return () => {
       if(display==='') return;
       if(!override) {
@@ -112,49 +122,41 @@ function App() {
     }
   }
 
-  const equalsClick = () => {
-    if(display==='') return;
-    const result = evalDisplay();
-    if(result) {
-      setDisplay(result.toString());
-      setEquation({});
-    }
-  }
 
   const buttons = [
     [
-      { text: "M-", fn: popMemory, type:ButtonType.OTHER },
-      { text: "M+", fn: storeInMemory, type:ButtonType.OTHER },
-      { text: "C", fn: clearDisplay, type:ButtonType.OTHER },
-      { text: "÷", fn: operatorClick("÷"),type:ButtonType.OPERATOR }
+      { text: "M-", fn: popMemoryClick, type:ButtonType.OTHER },
+      { text: "M+", fn: storeInMemoryClick, type:ButtonType.OTHER },
+      { text: "C", fn: clearDisplayClick, type:ButtonType.OTHER },
+      { text: "÷", fn: operatorClickFor("÷"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "7", fn: addToDisplay("7"), type:ButtonType.NUMBER },
-      { text: "8", fn: addToDisplay("8"), type:ButtonType.NUMBER },
-      { text: "9", fn: addToDisplay("9"), type:ButtonType.NUMBER },
-      { text: "×", fn: operatorClick("×"),type:ButtonType.OPERATOR }
+      { text: "7", fn: addToDisplayFor("7"), type:ButtonType.NUMBER },
+      { text: "8", fn: addToDisplayFor("8"), type:ButtonType.NUMBER },
+      { text: "9", fn: addToDisplayFor("9"), type:ButtonType.NUMBER },
+      { text: "×", fn: operatorClickFor("×"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "4", fn: addToDisplay("4"), type:ButtonType.NUMBER },
-      { text: "5", fn: addToDisplay("5"), type:ButtonType.NUMBER },
-      { text: "6", fn: addToDisplay("6"), type:ButtonType.NUMBER },
-      { text: "-", fn: operatorClick("-"),type:ButtonType.OPERATOR }
+      { text: "4", fn: addToDisplayFor("4"), type:ButtonType.NUMBER },
+      { text: "5", fn: addToDisplayFor("5"), type:ButtonType.NUMBER },
+      { text: "6", fn: addToDisplayFor("6"), type:ButtonType.NUMBER },
+      { text: "-", fn: operatorClickFor("-"),type:ButtonType.OPERATOR }
     ],
     [
-      { text: "1", fn: addToDisplay("1"), type:ButtonType.NUMBER },
-      { text: "2", fn: addToDisplay("2"), type:ButtonType.NUMBER },
-      { text: "3", fn: addToDisplay("3"), type:ButtonType.NUMBER },
-      { text: "+", fn: operatorClick("+"),type:ButtonType.OPERATOR }
+      { text: "1", fn: addToDisplayFor("1"), type:ButtonType.NUMBER },
+      { text: "2", fn: addToDisplayFor("2"), type:ButtonType.NUMBER },
+      { text: "3", fn: addToDisplayFor("3"), type:ButtonType.NUMBER },
+      { text: "+", fn: operatorClickFor("+"),type:ButtonType.OPERATOR }
     ],
     [
       { text: "±", fn: plusMinusClick, type:ButtonType.OTHER },
-      { text: "0", fn: addToDisplay("0"), type:ButtonType.NUMBER },
-      { text: ",", fn: addToDisplay("."), type:ButtonType.OTHER },
+      { text: "0", fn: addToDisplayFor("0"), type:ButtonType.NUMBER },
+      { text: ",", fn: addToDisplayFor("."), type:ButtonType.OTHER },
       { text: "=", fn: equalsClick, type:ButtonType.OPERATOR }
     ]
   ]
 
-  const docKeyDown = (event : KeyboardEvent) => {
+  const handleKeyDown = (event : KeyboardEvent) => {
     
     switch(event.key) {
       case '0':
@@ -168,45 +170,45 @@ function App() {
       case '8':
       case '9':
         case '.':
-          addToDisplay(event.key)();
+          addToDisplayFor(event.key)();
           break;
       case ',':
-        addToDisplay('.')();
+        addToDisplayFor('.')();
         break;
       case '+':
       case '-':
-        operatorClick(event.key)();
+        operatorClickFor(event.key)();
         break;
       case '*':
-        operatorClick('×')();
+        operatorClickFor('×')();
         break;
       case '/':
-        operatorClick('÷')();
+        operatorClickFor('÷')();
         break;
       case '=': 
       case 'Enter':
         equalsClick();
         break;
       case 'c':
-          clearDisplay();
+          clearDisplayClick();
           break;
       case 'Backspace':
         setDisplay(display.slice(0,display.length-1))
         break;
       case 's':
-        storeInMemory();
+        storeInMemoryClick();
         break;
       case 'l':
-        popMemory();
+        popMemoryClick();
         break;
     }
     
   }
 
   useEffect(()=> {
-    window.addEventListener('keydown',docKeyDown);
-    return () => window.removeEventListener('keydown',  docKeyDown);
-  },[docKeyDown])
+    window.addEventListener('keydown',handleKeyDown);
+    return () => window.removeEventListener('keydown',  handleKeyDown);
+  },[handleKeyDown])
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       return (
