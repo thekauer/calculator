@@ -1,3 +1,33 @@
+:root {
+    --light-gray:rgb(212, 212, 210);
+    --dark-gray:rgba(58, 58, 58,0.4);
+    --black: rgb(28, 28, 28);
+    --orange: rgb(255, 149, 0);
+
+    --hover-light-gray: rgb(192,192,190);
+    --hover-orange: rgb(225,119,0);
+    --hover-dark-gray: rgba(28,28,28,0.4)
+}
+
+.number {
+    background-color: var(--light-gray);
+}
+.number:hover {
+    background-color: var(--hover-light-gray);
+}
+.other {
+    background: linear-gradient(135deg, var(--light-gray),var(--dark-gray));
+}
+.other:hover {
+    background: linear-gradient(135deg, var(--light-gray),var(--hover-dark-gray));
+}
+.operator {
+    background-color: var(--orange);
+}
+.operator:hover {
+    background-color: var(--hover-orange);
+}
+
 .grid {
     display:grid;
     place-content: center;
@@ -6,15 +36,18 @@
 .grid button {
     width: 4em;
     height: 4em;
-    margin:0.5em;
+    border:0px;
+    outline: 1px solid var(--black);
+    border-radius: 0;
 }
 
 .grid .display {
     grid-row: 1 / 2;
     grid-column: 1 / 5;
 
-    border: solid 1px #1e1e1e;
-    margin:0.5em;
+    outline: solid 1px var(--black);
+    background-color: var(--black);
+    color:white;
     padding:0.5em;
 }
 
