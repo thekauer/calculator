@@ -15,6 +15,7 @@ function App() {
   const [display, setDisplay] = useState("0");
   const [equation, setEquation] = useState<Equation>({});
   const [override, setOverride] = useState(true);
+  const [id, setId] = useState("");
 
   const evalDisplay = () => {
     if (override) return;
@@ -48,7 +49,7 @@ function App() {
   }
   const popMemoryClick = () => {
     const get = async () => {
-      let resp = await fetch('/api/pop');
+      let resp = await fetch('/api/pop',{method:'Post',body:id});
       let text = await resp.text();
       if (resp.status === 200) {
         setDisplay(text);
@@ -60,6 +61,7 @@ function App() {
     const post = async () => {
       let resp = await fetch('/api/store', { method: 'POST', body: display.toString() });
       let text = await resp.text();
+      setId(text);
 
     }
     post();

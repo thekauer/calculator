@@ -6,13 +6,26 @@ const app = express();
 
 
 app.use(bodyParser.text());
+
+let users = new Map();
+const generateId = () => Math.random().toString(36).substr(2, 10);
+
 app.post('/api/store', (req, res) => {
-    console.log(req.sessionID);
+    const id = generateId();
+    if(users.has(id)) {
+        id = generateId();
+    }
+    
     const number = req.body;
-    res.send("2");
+    users.set(id,number);
+    res.send(id);
 });
 
-app.get('/api/pop', (req, res) => {
+app.post('/api/pop', (req, res) => {
+    const id = req.body;
+    if(!id) res.status(400).send();
+
+    const number = users.get(id);
     if(number) {
         res.status(200).send(number.toString());
     } else {
