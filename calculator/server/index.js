@@ -2,21 +2,14 @@
 const express = require("express");
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const app = express();
 
 
 app.use(bodyParser.text());
-app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  }))
-
 app.post('/api/store', (req, res) => {
+    console.log(req.sessionID);
     const number = req.body;
-    res.send(users.toString());
+    res.send("2");
 });
 
 app.get('/api/pop', (req, res) => {
