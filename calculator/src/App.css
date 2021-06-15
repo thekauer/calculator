@@ -31,10 +31,10 @@
 .grid {
     display:grid;
     place-content: center;
+    grid-template-columns: 4em 4em 4em 4em;
 }
 
 .grid button {
-    width: 4em;
     height: 4em;
     border:0px;
     outline: 1px solid var(--black);
