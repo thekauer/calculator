@@ -50,6 +50,7 @@
     color:white;
     padding:0.5em;
     text-align: right;
+    overflow: hidden;
 }
 
 .grid .display .top,.bottom {
