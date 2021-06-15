@@ -103,7 +103,6 @@ function App() {
           setDisplay(old);
 
         }
-        setOverride(true);
       } 
     }
   }
@@ -113,7 +112,6 @@ function App() {
     if(result) {
       setDisplay(result.toString());
       setEquation({});
-      setOverride(true);
     }
   }
 
