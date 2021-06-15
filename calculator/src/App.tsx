@@ -93,6 +93,7 @@ function App() {
   }
   const operatorClick = (op : string) => {
     return () => {
+      if(display==='') return;
       if(!override) {
         if(!equation.lhs) { 
           const lhs = Number.parseFloat(display);
@@ -112,6 +113,7 @@ function App() {
   }
 
   const equalsClick = () => {
+    if(display==='') return;
     const result = evalDisplay();
     if(result) {
       setDisplay(result.toString());
