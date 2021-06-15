@@ -35,9 +35,13 @@ function App() {
   }
   const plusMinusClick = () => {
     if(display.startsWith('-')) {
-      setDisplay(display.substr(1));
+        setDisplay(display.substr(1));
     } else {
+      if(display==='0') {
+        setDisplay('-');
+      } else {
       setDisplay('-'+display);
+      }
     }
   }
   const clearDisplay = () => {
@@ -79,7 +83,7 @@ function App() {
   }
   const addToDisplay = (s: string) => {
     return () => {
-      if(override) {
+      if(override || display==='0') {
         setDisplay(s);
         setOverride(false);
       } else {
@@ -148,19 +152,59 @@ function App() {
     ]
   ]
 
-  useEffect(()=> {
-    if(display.startsWith("0") && display.length > 1) {
-      setDisplay(display.substr(1));
-    }
-  }, [display])
   const docKeyDown = (event : KeyboardEvent) => {
+    
+    switch(event.key) {
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        case '.':
+          addToDisplay(event.key)();
+          break;
+      case ',':
+        addToDisplay('.')();
+        break;
+      case '+':
+      case '-':
+        operatorClick(event.key)();
+        break;
+      case '*':
+        operatorClick('×')();
+        break;
+      case '/':
+        operatorClick('÷')();
+        break;
+      case '=': 
+      case 'Enter':
+        equalsClick();
+        break;
+      case 'c':
+          clearDisplay();
+          break;
+      case 'Backspace':
+        setDisplay(display.slice(0,display.length-1))
+        break;
+      case 's':
+        storeInMemory();
+        break;
+      case 'l':
+        popMemory();
+        break;
+    }
     
   }
 
   useEffect(()=> {
     window.addEventListener('keydown',docKeyDown);
-    return window.removeEventListener('keydown',  docKeyDown);
-  },[])
+    return () => window.removeEventListener('keydown',  docKeyDown);
+  },[docKeyDown])
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       return (
