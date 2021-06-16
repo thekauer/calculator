@@ -62,7 +62,7 @@ function App() {
         return text;
       }
     }
-    get().then(text => { if (text) setEquation({...equation,rhs:text}); });
+    get().then(text => { if (text) setEquation(e => {return {...e,rhs:text}}) });
   }
   /**
    * Handler for the memory storing of the calculator.
@@ -93,16 +93,16 @@ function App() {
     if (equation.rhs.startsWith('-')) {
       if (equation.rhs.length > 1) {
         const rhs = equation.rhs.substr(1);
-        setEquation({...equation,rhs});
+        setEquation(e => {return {...e,rhs}});
       } else {
-        setEquation({...equation,rhs:"0"});
+        setEquation(e => {return {...e,rhs:"0"}});
       }
     } else {
       if (equation.rhs === '0') {
-        setEquation({...equation,rhs:"-"});
+        setEquation(e=> {return {...e,rhs:"-"}});
       } else {
         const rhs = '-' + equation.rhs;
-        setEquation({...equation,rhs});
+        setEquation(e => {return {...e,rhs}});
       }
     }
   }
@@ -113,7 +113,7 @@ function App() {
     if (equation.rhs === "0") {
       setEquation({rhs:equation.rhs});
     } else {
-      setEquation({...equation,rhs:"0"});
+      setEquation(e => {return {...e,rhs:"0"}});
     }
   }
   /**
@@ -140,10 +140,10 @@ function App() {
   const addToDisplayClickFor = (label: string) => {
     return () => {
       if (override || equation.rhs === '0') {
-        setEquation({...equation,rhs:label});
+        setEquation(e=>{return {...e,rhs:label}});
         setOverride(false);
       } else {
-        setEquation({...equation,rhs:equation.rhs+label});
+        setEquation(e=>{return {...e,rhs:equation.rhs+label}});
       }
     }
   }
@@ -246,7 +246,7 @@ function App() {
         break;
       case 'Backspace':
         const rhs = equation.rhs;
-        setEquation({...equation,rhs:rhs.slice(0,rhs.length-1)});
+        setEquation(e => {return {...e,rhs:rhs.slice(0,rhs.length-1)}});
         break;
       case 'm':
         storeInMemoryClick();
