@@ -21,7 +21,7 @@ function App() {
     if (override) return;
     const rhs = Number.parseFloat(display);
     let result = 0;
-    if (equation.op && equation.lhs) {
+    if (equation.op && equation.lhs !== undefined) {
       setHistory(" ");
       switch (equation.op) {
         case '+':
