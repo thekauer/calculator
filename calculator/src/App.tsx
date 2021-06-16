@@ -16,7 +16,11 @@ function App() {
   const [equation, setEquation] = useState<Equation>({});
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
-
+  
+/**
+ * Evaluates the equation based on the display and the equation state
+ * @returns the result of the equation
+ */
   const evalDisplay = () => {
     if (override) return;
     const rhs = Number.parseFloat(display);
@@ -47,6 +51,10 @@ function App() {
       return result;
     }
   }
+  /**
+   * Handler for the memory fetching of the calculator.
+   * Sends your id to the server through a POST request to the /api/pop endpoint, and receives the stored number.
+   */
   const popMemoryClick = () => {
     const get = async () => {
       let resp = await fetch('/api/pop',{method:'Post',body:id});
@@ -57,6 +65,10 @@ function App() {
     }
     get().then(text => {if(text)setDisplay(text);});
   }
+  /**
+   * Handler for the memory storing of the calculator.
+   * Sends your a POST request to the /api/store endpoint, and receives the id used to fetch the number.
+   */
   const storeInMemoryClick = () => {
     const post = async () => {
       let resp = await fetch('/api/store', { method: 'POST', body: display.toString() });
@@ -66,6 +78,9 @@ function App() {
     }
     post();
   }
+  /**
+   * Handles the ± button. Inverts the sign of the displayed number.
+   */
   const plusMinusClick = () => {
     if (display.startsWith('-')) {
       if(display.length>1) {
@@ -81,6 +96,9 @@ function App() {
       }
     }
   }
+  /**
+   * Handles the C button. On first call clears the bottom part, and on the second call clears top too.
+   */
   const clearDisplayClick = () => {
     if (display === "0") {
       setHistory(" ");
@@ -89,6 +107,10 @@ function App() {
       setDisplay("0");
     }
   }
+  /**
+   * Handles the = button. Evaluates the expression on the display if possible.
+   * @returns if no value was supplied
+   */
   const equalsClick = () => {
     if (display === '') return;
     const result = evalDisplay();
@@ -97,16 +119,34 @@ function App() {
       setEquation({});
     }
   }
-  const addToDisplayFor = (s: string) => {
+  /**
+   * Gives you a function that appends the given label to the display
+   * @param label label of the button
+   * @returns a function that adds the label to the display
+   * @example
+   * addDisplayFor('1')() // add 1 to the screen
+   * @example
+   * { text: "1", fn: addToDisplayFor("1"), type: ButtonType.NUMBER },
+   */
+  const addToDisplayFor = (label: string) => {
     return () => {
       if (override || display === '0') {
-        setDisplay(s);
+        setDisplay(label);
         setOverride(false);
       } else {
-        setDisplay(d=> d + s);
+        setDisplay(d=> d + label);
       }
     }
   }
+    /**
+   * Gives you a function that appends the given operator and the current displayed value to the history
+   * @param op operator as text for the button
+   * @returns a function that adds the label to the display
+   * @example
+   * operatorClickFor('+')() // add the current dislayed value and the oprator to the history
+   * @example
+   * { text: "+", fn: operatorClickFor("+"), type: ButtonType.OPERATOR },
+   */
   const operatorClickFor = (op: string) => {
     return () => {
       if (display === '') return;
@@ -161,7 +201,10 @@ function App() {
       { text: "=", fn: equalsClick, type: ButtonType.OPERATOR }
     ]
   ]
-
+/**
+ * Handles the keydown event for the calculator.
+ * @param event keydown event
+ */
   const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case '0':
@@ -219,6 +262,10 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   },[handleKeyDown])
+  /**
+   * Draws all the buttons of the calculator.
+   * @returns JSX.Elements from the buttons array
+   */
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       const key = row * 4 + col;
