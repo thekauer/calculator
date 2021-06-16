@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 
 const dbPath = './db/';
-let users = new Set();
+const users = new Set();
 /**
  * @returns a random string of letters and numbers with a length of 8
  */
