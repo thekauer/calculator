@@ -56,13 +56,20 @@ function App() {
    */
   const popMemoryClick = () => {
     const get = async () => {
-      let resp = await fetch('/api/pop', { method: 'Post', body: id });
-      let text = await resp.text();
+      const body = {id};
+      let resp = await fetch('/api/pop', { method: 'Post', headers: {
+        'Content-Type': 'application/json'
+      }, body: JSON.stringify(body) });
+      let json = await resp.json();
       if (resp.status === 200) {
-        return text;
+        
+        return json;
       }
     }
-    get().then(text => { if (text) setEquation(e => {return {...e,rhs:text}}) });
+    get().then(json => { if (json) { 
+      setEquation(e => {return {...e,rhs:json.number}});
+      setId(json.id);
+    }});
   }
   /**
    * Handler for the memory storing of the calculator.
@@ -70,10 +77,15 @@ function App() {
    */
   const storeInMemoryClick = () => {
     const post = async () => {
-      let resp = await fetch('/api/store', { method: 'POST', body: equation.rhs });
-      let text = await resp.text();
-      setId(text);
-
+      console.log({id});
+      const body = {number:equation.rhs,id:id};
+      let resp = await fetch('/api/store', { 
+        method: 'POST', headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body) });
+      const json = await resp.json();
+      if(json.id) setId(json.id);
     }
     post();
   }

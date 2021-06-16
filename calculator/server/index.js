@@ -6,22 +6,24 @@ const app = express();
 
 
 
-app.use(bodyParser.text());
+app.use(bodyParser.json())
 
 
 app.post('/api/store', (req, res) => {
-    const id = generateId(); 
-    const number = req.body;
+    console.log(req.body);
+    let {number,id} = req.body;
+    if(!id) id = generateId();
     saveNumber(id,number);
-    res.send(id);
+    res.json({id});
 });
 
 app.post('/api/pop', async (req, res) => {
-    const id = req.body;
+    const {id} = req.body;
+    console.log('pop',{id});
     if(!isUser(id)) res.status(400).send();
     const number = await getNumberForId(id);
     if(number) {
-        res.status(200).send(number.toString());
+        res.status(200).json({number,id})
     } else {
         res.status(400).send();
     }

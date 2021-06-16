@@ -1,7 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 
-const dbFile = 'db.txt';
+const dbPath = './db/';
 let users = new Set();
 /**
  * @returns a random string of letters and numbers with a length of 8
@@ -14,7 +14,7 @@ const getRandomString = () => Math.random().toString(36).substr(2, 10);
  */
 const saveNumber = (id,number) => {
     users.add(id);
-    fs.appendFileSync(dbFile,id + " " +number.toString() + "\n");
+    fs.writeFileSync(dbPath+id,number.toString());
 }
 /**
  * @returns a unique identifier for a user
@@ -33,20 +33,13 @@ const generateId = () => {
  * @returns the number of the user
  */
 const getNumberForId = (id) => {
-    const fileStream = fs.createReadStream(dbFile);
-
-    const rl = readline.createInterface({
-        input: fileStream,
-    });
-    const get = async () => {
-        for await (const line of rl) {
-            const [first, second, ...rest] = line.split(' ');
-            if (first === id) {
-                return second;
-            }
-        }
-    }
-    return get();
+    const filename = dbPath+id;
+    if(fs.existsSync(filename)) {
+        const text = fs.readFileSync(filename);
+        const number = Number.parseInt(text);
+        return number;
+    } 
+    return undefined;
 }
 /**
  * Checks if user exists in database
@@ -61,9 +54,10 @@ const isUser = (id) => {
  */
 const initServer = () => {
     console.log('running on port 8080');
-    if(fs.existsSync(dbFile)) {
-        fs.unlinkSync(dbFile);
+    if(fs.existsSync(dbPath)) {
+        fs.rmdirSync(dbPath,{recursive:true});
     }
+    fs.mkdirSync(dbPath);
 }
 
 module.exports= {
