@@ -12,7 +12,7 @@ enum ButtonType {
   OTHER = 'other'
 }
 function App() {
-  const [equation, setEquation] = useState<Equation>({rhs:"0"});
+  const [equation, setEquation] = useState<Equation>({ rhs: "0" });
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
 
@@ -22,7 +22,7 @@ function App() {
    */
   const evalDisplay = () => {
     if (override) return;
-    const {lhs,rhs,op} = equation;
+    const { lhs, rhs, op } = equation;
     let result = 0;
     if (lhs !== undefined && rhs !== undefined && op !== undefined) {
       const left = Number.parseFloat(lhs);
@@ -41,7 +41,7 @@ function App() {
           if (right !== 0) {
             result = left / right;
           } else {
-            setEquation({rhs:"Nem lehet 0-val osztani"});
+            setEquation({ rhs: "Nem lehet 0-val osztani" });
             setOverride(true);
             return;
           }
@@ -55,21 +55,24 @@ function App() {
    * Sends your id to the server through a POST request to the /api/pop endpoint, and receives the stored number.
    */
   const popMemoryClick = () => {
+    if (!id) return;
+
     const get = async () => {
-      const body = {id};
-      let resp = await fetch('/api/pop', { method: 'Post', headers: {
-        'Content-Type': 'application/json'
-      }, body: JSON.stringify(body) });
+      const body = { id };
+      let resp = await fetch('/api/pop', {
+        method: 'Post', headers: {
+          'Content-Type': 'application/json'
+        }, body: JSON.stringify(body)
+      });
       let json = await resp.json();
-      if (resp.status === 200) {
-        
-        return json;
-      }
+      if (resp.status === 200) return json;
     }
-    get().then(json => { if (json) { 
-      setEquation(e => {return {...e,rhs:json.number}});
-      setId(json.id);
-    }});
+    get().then(json => {
+      if (json!==undefined) {
+        setEquation(e => { return { ...e, rhs: json.number } });
+        setId(json.id);
+      }
+    }).catch(_ => setId(''));
   }
   /**
    * Handler for the memory storing of the calculator.
@@ -77,15 +80,16 @@ function App() {
    */
   const storeInMemoryClick = () => {
     const post = async () => {
-      console.log({id});
-      const body = {number:equation.rhs,id:id};
-      let resp = await fetch('/api/store', { 
+      console.log({ id });
+      const body = { number: equation.rhs, id: id };
+      let resp = await fetch('/api/store', {
         method: 'POST', headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body) });
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
       const json = await resp.json();
-      if(json.id) setId(json.id);
+      if (json.id) setId(json.id);
     }
     post();
   }
@@ -105,16 +109,16 @@ function App() {
     if (equation.rhs.startsWith('-')) {
       if (equation.rhs.length > 1) {
         const rhs = equation.rhs.substr(1);
-        setEquation(e => {return {...e,rhs}});
+        setEquation(e => { return { ...e, rhs } });
       } else {
-        setEquation(e => {return {...e,rhs:"0"}});
+        setEquation(e => { return { ...e, rhs: "0" } });
       }
     } else {
       if (equation.rhs === '0') {
-        setEquation(e=> {return {...e,rhs:"-"}});
+        setEquation(e => { return { ...e, rhs: "-" } });
       } else {
         const rhs = '-' + equation.rhs;
-        setEquation(e => {return {...e,rhs}});
+        setEquation(e => { return { ...e, rhs } });
       }
     }
   }
@@ -123,9 +127,9 @@ function App() {
    */
   const clearDisplayClick = () => {
     if (equation.rhs === "0") {
-      setEquation({rhs:equation.rhs});
+      setEquation({ rhs: equation.rhs });
     } else {
-      setEquation(e => {return {...e,rhs:"0"}});
+      setEquation(e => { return { ...e, rhs: "0" } });
     }
   }
   /**
@@ -137,12 +141,12 @@ function App() {
     const result = evalDisplay();
     if (result !== undefined) {
       const rhs = result.toString();
-      setEquation({rhs});
+      setEquation({ rhs });
     }
   }
   const backSpacePress = () => {
     const rhs = equation.rhs;
-    setEquation(e => {return {...e,rhs:rhs.slice(0,rhs.length-1)}});
+    setEquation(e => { return { ...e, rhs: rhs.slice(0, rhs.length - 1) } });
   }
   /**
    * Gives you a function that appends the given label to the display
@@ -156,10 +160,10 @@ function App() {
   const addToDisplayClickFor = (label: string) => {
     return () => {
       if (override || equation.rhs === '0') {
-        setEquation(e=>{return {...e,rhs:label}});
+        setEquation(e => { return { ...e, rhs: label } });
         setOverride(false);
       } else {
-        setEquation(e=>{return {...e,rhs:equation.rhs+label}});
+        setEquation(e => { return { ...e, rhs: equation.rhs + label } });
       }
     }
   }
@@ -177,10 +181,10 @@ function App() {
       if (equation.rhs === '') return;
       if (!override) {
         if (!equation.lhs) {
-          setEquation({lhs:equation.rhs,rhs:"0",op})
+          setEquation({ lhs: equation.rhs, rhs: "0", op })
         } else {
           const lhs = evalDisplay()?.toString();
-          if(lhs) setEquation({ lhs, op,rhs:"0" });
+          if (lhs) setEquation({ lhs, op, rhs: "0" });
         }
       }
     }
@@ -299,7 +303,7 @@ function App() {
     <>
       <div className="grid">
         <div className="display">
-          <div className="top">{equation.lhs && equation.op && equation.lhs+equation.op}</div>
+          <div className="top">{equation.lhs && equation.op && equation.lhs + equation.op}</div>
           <div className="bottom">{equation.rhs}</div>
         </div>
         {drawButtons()}
