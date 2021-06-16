@@ -192,6 +192,7 @@ function App() {
         break;
       case '=':
       case 'Enter':
+        event.preventDefault();
         equalsClick();
         break;
       case 'Delete':
