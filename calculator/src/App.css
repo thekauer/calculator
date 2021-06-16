@@ -41,6 +41,9 @@
     border-radius: 0;
 }
 
+.grid button:nth-child(21) {
+    box-shadow: inset 1px 1px 8px rgba(0,0,0,0.3);
+}
 .grid .display {
     grid-row: 1 / 2;
     grid-column: 1 / 5;
