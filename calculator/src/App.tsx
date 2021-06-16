@@ -220,8 +220,10 @@ function App() {
   },[handleKeyDown])
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
+      const key = row * 4 + col;
+      const id = "button" + (key + 1).toString();
       return (
-        <button key={row * 4 + col} className={button.type?.toString()} style={{ gridRow: row + 1 + 2, gridColumn: col + 1 }} onClick={button.fn}>{button.text}</button>
+        <button id={id} key={row * 4 + col} className={button.type?.toString()} style={{ gridRow: row + 1 + 2, gridColumn: col + 1 }} onClick={button.fn}>{button.text}</button>
       )
     }))
   }
