@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 interface Equation {
-  lhs?: number;
+  lhs?: string;
   op?: string
+  rhs: string;
 }
 enum ButtonType {
   OPERATOR = 'operator',
@@ -11,9 +12,7 @@ enum ButtonType {
   OTHER = 'other'
 }
 function App() {
-  const [history, setHistory] = useState("");
-  const [display, setDisplay] = useState("0");
-  const [equation, setEquation] = useState<Equation>({});
+  const [equation, setEquation] = useState<Equation>({rhs:"0"});
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
 
@@ -23,27 +22,26 @@ function App() {
    */
   const evalDisplay = () => {
     if (override) return;
-    const rhs = Number.parseFloat(display);
+    const {lhs,rhs,op} = equation;
     let result = 0;
-    if (equation.op && equation.lhs !== undefined) {
-      setHistory(" ");
+    if (lhs !== undefined && rhs !== undefined && op !== undefined) {
+      const left = Number.parseFloat(lhs);
+      const right = Number.parseFloat(rhs);
       switch (equation.op) {
         case '+':
-          result = equation.lhs + rhs;
+          result = left + right;
           break;
         case '-':
-          result = equation.lhs - rhs;
+          result = left - right;
           break;
         case '×':
-          result = equation.lhs * rhs;
+          result = left * right;
           break;
         case '÷':
-          if (rhs !== 0) {
-            result = equation.lhs / rhs;
+          if (right !== 0) {
+            result = left / right;
           } else {
-            setDisplay("Nem lehet 0-val osztani");
-            setOverride(true);
-            setEquation({});
+            setEquation({...equation,rhs:"Nem lehet 0-val osztani"});
             return;
           }
           break;
@@ -63,7 +61,7 @@ function App() {
         return text;
       }
     }
-    get().then(text => { if (text) setDisplay(text); });
+    get().then(text => { if (text) setEquation({...equation,rhs:text}); });
   }
   /**
    * Handler for the memory storing of the calculator.
@@ -71,7 +69,7 @@ function App() {
    */
   const storeInMemoryClick = () => {
     const post = async () => {
-      let resp = await fetch('/api/store', { method: 'POST', body: display.toString() });
+      let resp = await fetch('/api/store', { method: 'POST', body: equation.rhs });
       let text = await resp.text();
       setId(text);
 
@@ -82,7 +80,8 @@ function App() {
    * Handles when the , button is clicked. Doesn't add a comma to the display if there is already one there.
    */
   const commaClick = () => {
-    if (display[display.length - 1] !== '.') {
+    const rhs = equation.rhs;
+    if (rhs[rhs.length - 1] !== '.') {
       addToDisplayClickFor('.')();
     }
   }
@@ -90,17 +89,19 @@ function App() {
    * Handles the ± button. Inverts the sign of the displayed number.
    */
   const plusMinusClick = () => {
-    if (display.startsWith('-')) {
-      if (display.length > 1) {
-        setDisplay(display.substr(1));
+    if (equation.rhs.startsWith('-')) {
+      if (equation.rhs.length > 1) {
+        const rhs = equation.rhs.substr(1);
+        setEquation({...equation,rhs});
       } else {
-        setDisplay("0");
+        setEquation({...equation,rhs:"0"});
       }
     } else {
-      if (display === '0') {
-        setDisplay('-');
+      if (equation.rhs === '0') {
+        setEquation({...equation,rhs:"-"});
       } else {
-        setDisplay(d => '-' + d);
+        const rhs = '-' + equation.rhs;
+        setEquation({...equation,rhs});
       }
     }
   }
@@ -108,11 +109,10 @@ function App() {
    * Handles the C button. On first call clears the bottom part, and on the second call clears top too.
    */
   const clearDisplayClick = () => {
-    if (display === "0") {
-      setHistory(" ");
-      setEquation({});
+    if (equation.rhs === "0") {
+      setEquation({lhs:undefined,op:undefined,rhs:equation.rhs});
     } else {
-      setDisplay("0");
+      setEquation({...equation,rhs:"0"});
     }
   }
   /**
@@ -120,11 +120,11 @@ function App() {
    * @returns if no value was supplied
    */
   const equalsClick = () => {
-    if (display === '') return;
+    if (equation.rhs === '') return;
     const result = evalDisplay();
     if (result !== undefined) {
-      setDisplay(result.toString());
-      setEquation({});
+      const rhs = result.toString();
+      setEquation({rhs,op:undefined,lhs:undefined});
     }
   }
   /**
@@ -138,11 +138,11 @@ function App() {
    */
   const addToDisplayClickFor = (label: string) => {
     return () => {
-      if (override || display === '0') {
-        setDisplay(label);
+      if (override || equation.rhs === '0') {
+        setEquation({...equation,rhs:label});
         setOverride(false);
       } else {
-        setDisplay(d => d + label);
+        setEquation({...equation,rhs:equation.rhs+label});
       }
     }
   }
@@ -157,20 +157,14 @@ function App() {
  */
   const operatorClickFor = (op: string) => {
     return () => {
-      if (display === '') return;
+      if (equation.rhs === '') return;
       if (!override) {
         if (!equation.lhs) {
-          const lhs = Number.parseFloat(display);
-          setEquation({ lhs, op });
-          setHistory(lhs + op)
-          setDisplay("0");
+          setEquation({lhs:equation.rhs,rhs:"0",op})
         } else {
-          const old = display;
-          const lhs = evalDisplay();
-          setEquation({ lhs, op });
-          setHistory(lhs + op);
-          setDisplay(old);
-
+          const old = equation.rhs;
+          const lhs = evalDisplay()?.toString();
+          if(lhs) setEquation({ lhs, op,rhs:"0" });
         }
       }
     }
@@ -251,7 +245,8 @@ function App() {
         clearDisplayClick();
         break;
       case 'Backspace':
-        setDisplay(display.slice(0, display.length - 1))
+        const rhs = equation.rhs;
+        setEquation({...equation,rhs:rhs.slice(0,rhs.length-1)});
         break;
       case 'm':
         storeInMemoryClick();
@@ -289,8 +284,8 @@ function App() {
     <>
       <div className="grid">
         <div className="display">
-          <div className="top">{history}</div>
-          <div className="bottom">{display}</div>
+          <div className="top">{equation.lhs && equation.op && equation.lhs+equation.op}</div>
+          <div className="bottom">{equation.rhs}</div>
         </div>
         {drawButtons()}
       </div>
