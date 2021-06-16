@@ -190,17 +190,21 @@ function App() {
       case 'Enter':
         equalsClick();
         break;
+      case 'Delete':
       case 'c':
         clearDisplayClick();
         break;
       case 'Backspace':
         setDisplay(display.slice(0, display.length - 1))
         break;
-      case 's':
+      case 'm':
         storeInMemoryClick();
         break;
-      case 'l':
+      case 'n':
         popMemoryClick();
+        break;
+      case 's':
+        plusMinusClick();
         break;
     }
 
