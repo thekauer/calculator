@@ -20,7 +20,6 @@ app.post('/api/pop', async (req, res) => {
     const id = req.body;
     if(!isUser(id)) res.status(400).send();
     const number = await getNumberForId(id);
-    console.log(number);
     if(number) {
         res.status(200).send(number.toString());
     } else {
