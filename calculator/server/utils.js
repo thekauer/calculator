@@ -61,7 +61,9 @@ const isUser = (id) => {
  */
 const initServer = () => {
     console.log('running on port 8080');
-    fs.unlinkSync(dbFile);
+    if(fs.existsSync(dbFile)) {
+        fs.unlinkSync(dbFile);
+    }
 }
 
 module.exports= {
