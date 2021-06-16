@@ -16,7 +16,7 @@ function App() {
   const [equation, setEquation] = useState<Equation>({});
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
-  
+
 /**
  * Evaluates the equation based on the display and the equation state
  * @returns the result of the equation
@@ -124,11 +124,11 @@ function App() {
    * @param label label of the button
    * @returns a function that adds the label to the display
    * @example
-   * addDisplayFor('1')() // add 1 to the screen
+   * addToDisplayClickFor('1')() // add 1 to the screen
    * @example
-   * { text: "1", fn: addToDisplayFor("1"), type: ButtonType.NUMBER },
+   * { text: "1", fn: addToDisplayClickFor("1"), type: ButtonType.NUMBER },
    */
-  const addToDisplayFor = (label: string) => {
+  const addToDisplayClickFor = (label: string) => {
     return () => {
       if (override || display === '0') {
         setDisplay(label);
@@ -177,27 +177,27 @@ function App() {
       { text: "÷", fn: operatorClickFor("÷"), type: ButtonType.OPERATOR }
     ],
     [
-      { text: "7", fn: addToDisplayFor("7"), type: ButtonType.NUMBER },
-      { text: "8", fn: addToDisplayFor("8"), type: ButtonType.NUMBER },
-      { text: "9", fn: addToDisplayFor("9"), type: ButtonType.NUMBER },
+      { text: "7", fn: addToDisplayClickFor("7"), type: ButtonType.NUMBER },
+      { text: "8", fn: addToDisplayClickFor("8"), type: ButtonType.NUMBER },
+      { text: "9", fn: addToDisplayClickFor("9"), type: ButtonType.NUMBER },
       { text: "×", fn: operatorClickFor("×"), type: ButtonType.OPERATOR }
     ],
     [
-      { text: "4", fn: addToDisplayFor("4"), type: ButtonType.NUMBER },
-      { text: "5", fn: addToDisplayFor("5"), type: ButtonType.NUMBER },
-      { text: "6", fn: addToDisplayFor("6"), type: ButtonType.NUMBER },
+      { text: "4", fn: addToDisplayClickFor("4"), type: ButtonType.NUMBER },
+      { text: "5", fn: addToDisplayClickFor("5"), type: ButtonType.NUMBER },
+      { text: "6", fn: addToDisplayClickFor("6"), type: ButtonType.NUMBER },
       { text: "-", fn: operatorClickFor("-"), type: ButtonType.OPERATOR }
     ],
     [
-      { text: "1", fn: addToDisplayFor("1"), type: ButtonType.NUMBER },
-      { text: "2", fn: addToDisplayFor("2"), type: ButtonType.NUMBER },
-      { text: "3", fn: addToDisplayFor("3"), type: ButtonType.NUMBER },
+      { text: "1", fn: addToDisplayClickFor("1"), type: ButtonType.NUMBER },
+      { text: "2", fn: addToDisplayClickFor("2"), type: ButtonType.NUMBER },
+      { text: "3", fn: addToDisplayClickFor("3"), type: ButtonType.NUMBER },
       { text: "+", fn: operatorClickFor("+"), type: ButtonType.OPERATOR }
     ],
     [
       { text: "±", fn: plusMinusClick, type: ButtonType.OTHER },
-      { text: "0", fn: addToDisplayFor("0"), type: ButtonType.NUMBER },
-      { text: ",", fn: addToDisplayFor("."), type: ButtonType.OTHER },
+      { text: "0", fn: addToDisplayClickFor("0"), type: ButtonType.NUMBER },
+      { text: ",", fn: addToDisplayClickFor("."), type: ButtonType.OTHER },
       { text: "=", fn: equalsClick, type: ButtonType.OPERATOR }
     ]
   ]
@@ -218,10 +218,10 @@ function App() {
       case '8':
       case '9':
       case '.':
-        addToDisplayFor(event.key)();
+        addToDisplayClickFor(event.key)();
         break;
       case ',':
-        addToDisplayFor('.')();
+        addToDisplayClickFor('.')();
         break;
       case '+':
       case '-':
