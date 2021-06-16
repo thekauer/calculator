@@ -48,7 +48,7 @@ describe('test operations', () => {
     expect(top.innerHTML).toBe('1+');
     expect(bottom.innerHTML).toBe('1');
     eq.click();
-    expect(top.innerHTML).toBe(" ");
+    expect(top.innerHTML).toBe("");
     expect(bottom.innerHTML).toBe('2');
   })
   test('1+0', () => {
@@ -96,12 +96,12 @@ describe('test operations', () => {
     expect(top.innerHTML).toBe('1-');
     expect(bottom.innerHTML).toBe('2');
     eq.click();
-    expect(top.innerHTML).toBe(" ");
+    expect(top.innerHTML).toBe("");
     expect(bottom.innerHTML).toBe('-1');
     sub.click();
     one.click();
     eq.click();
-    expect(top.innerHTML).toBe(" ");
+    expect(top.innerHTML).toBe("");
     expect(bottom.innerHTML).toBe('-2');
 
   })
@@ -122,7 +122,7 @@ describe('test operations', () => {
     three.click();
     eq.click();
     expect(bottom.innerHTML).toBe('6');
-    expect(top.innerHTML).toBe(' ');
+    expect(top.innerHTML).toBe("");
     div.click();
     two.click();
     eq.click();
@@ -131,10 +131,10 @@ describe('test operations', () => {
     zero?.click();
     eq.click();
     expect(bottom.innerHTML).toBe("Nem lehet 0-val osztani");
-    expect(top.innerHTML).toBe(' ');
+    expect(top.innerHTML).toBe("");
     three.click();
     expect(bottom.innerHTML).toBe('3');
-    expect(top.innerHTML).toBe(' ');
+    expect(top.innerHTML).toBe("");
 
   })
   test('1.5*2', () => {
@@ -186,7 +186,7 @@ describe('test operations', () => {
 
     C.click()
 
-    expect(top.innerHTML).toBe(' ');
+    expect(top.innerHTML).toBe("");
 
   })
   test('± 12 C ± ± 12 ± 3 ±', () => {

@@ -41,7 +41,8 @@ function App() {
           if (right !== 0) {
             result = left / right;
           } else {
-            setEquation({...equation,rhs:"Nem lehet 0-val osztani"});
+            setEquation({rhs:"Nem lehet 0-val osztani"});
+            setOverride(true);
             return;
           }
           break;
@@ -110,7 +111,7 @@ function App() {
    */
   const clearDisplayClick = () => {
     if (equation.rhs === "0") {
-      setEquation({lhs:undefined,op:undefined,rhs:equation.rhs});
+      setEquation({rhs:equation.rhs});
     } else {
       setEquation({...equation,rhs:"0"});
     }
@@ -124,7 +125,7 @@ function App() {
     const result = evalDisplay();
     if (result !== undefined) {
       const rhs = result.toString();
-      setEquation({rhs,op:undefined,lhs:undefined});
+      setEquation({rhs});
     }
   }
   /**
