@@ -73,7 +73,7 @@ function App() {
       if (display === '0') {
         setDisplay('-');
       } else {
-        setDisplay('-' + display);
+        setDisplay(d => '-' + d);
       }
     }
   }
@@ -99,7 +99,7 @@ function App() {
         setDisplay(s);
         setOverride(false);
       } else {
-        setDisplay(display + s);
+        setDisplay(d=> d + s);
       }
     }
   }
@@ -159,7 +159,6 @@ function App() {
   ]
 
   const handleKeyDown = (event: KeyboardEvent) => {
-
     switch (event.key) {
       case '0':
       case '1':
@@ -210,7 +209,7 @@ function App() {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown])
+  },[handleKeyDown])
   const drawButtons = () => {
     return buttons.map((arr, row) => arr.map((button, col) => {
       return (
