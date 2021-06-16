@@ -52,10 +52,10 @@ function App() {
       let resp = await fetch('/api/pop',{method:'Post',body:id});
       let text = await resp.text();
       if (resp.status === 200) {
-        setDisplay(text);
+        return text;
       }
     }
-    get();
+    get().then(text => {if(text)setDisplay(text);});
   }
   const storeInMemoryClick = () => {
     const post = async () => {
@@ -226,8 +226,6 @@ function App() {
     }))
   }
 
-
-  useEffect(()=>console.log(equation),[equation]);
 
   return (
     <>
