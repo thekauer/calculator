@@ -163,7 +163,6 @@ function App() {
         if (!equation.lhs) {
           setEquation({lhs:equation.rhs,rhs:"0",op})
         } else {
-          const old = equation.rhs;
           const lhs = evalDisplay()?.toString();
           if(lhs) setEquation({ lhs, op,rhs:"0" });
         }
