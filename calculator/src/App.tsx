@@ -69,7 +69,7 @@ function App() {
     }
     get().then(json => {
       if (json!==undefined) {
-        setEquation(e => { return { ...e, rhs: json.number } });
+        setEquation(e => { return { ...e, rhs: json.number.toString() } });
         setId(json.id);
       }
     }).catch(_ => setId(''));
