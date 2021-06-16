@@ -128,6 +128,10 @@ function App() {
       setEquation({rhs});
     }
   }
+  const backSpacePress = () => {
+    const rhs = equation.rhs;
+    setEquation(e => {return {...e,rhs:rhs.slice(0,rhs.length-1)}});
+  }
   /**
    * Gives you a function that appends the given label to the display
    * @param label label of the button
@@ -245,8 +249,7 @@ function App() {
         clearDisplayClick();
         break;
       case 'Backspace':
-        const rhs = equation.rhs;
-        setEquation(e => {return {...e,rhs:rhs.slice(0,rhs.length-1)}});
+        backSpacePress();
         break;
       case 'm':
         storeInMemoryClick();
