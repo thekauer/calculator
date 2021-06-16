@@ -88,7 +88,7 @@ function App() {
   const equalsClick = () => {
     if (display === '') return;
     const result = evalDisplay();
-    if (result) {
+    if (result !== undefined) {
       setDisplay(result.toString());
       setEquation({});
     }
@@ -217,6 +217,9 @@ function App() {
       )
     }))
   }
+
+
+  useEffect(()=>console.log(equation),[equation]);
 
   return (
     <>
