@@ -17,10 +17,10 @@ function App() {
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
 
-/**
- * Evaluates the equation based on the display and the equation state
- * @returns the result of the equation
- */
+  /**
+   * Evaluates the equation based on the display and the equation state
+   * @returns the result of the equation
+   */
   const evalDisplay = () => {
     if (override) return;
     const rhs = Number.parseFloat(display);
@@ -57,13 +57,13 @@ function App() {
    */
   const popMemoryClick = () => {
     const get = async () => {
-      let resp = await fetch('/api/pop',{method:'Post',body:id});
+      let resp = await fetch('/api/pop', { method: 'Post', body: id });
       let text = await resp.text();
       if (resp.status === 200) {
         return text;
       }
     }
-    get().then(text => {if(text)setDisplay(text);});
+    get().then(text => { if (text) setDisplay(text); });
   }
   /**
    * Handler for the memory storing of the calculator.
@@ -79,11 +79,19 @@ function App() {
     post();
   }
   /**
+   * Handles when the , button is clicked. Doesn't add a comma to the display if there is already one there.
+   */
+  const commaClick = () => {
+    if (display[display.length - 1] !== '.') {
+      addToDisplayClickFor('.')();
+    }
+  }
+  /**
    * Handles the ± button. Inverts the sign of the displayed number.
    */
   const plusMinusClick = () => {
     if (display.startsWith('-')) {
-      if(display.length>1) {
+      if (display.length > 1) {
         setDisplay(display.substr(1));
       } else {
         setDisplay("0");
@@ -134,19 +142,19 @@ function App() {
         setDisplay(label);
         setOverride(false);
       } else {
-        setDisplay(d=> d + label);
+        setDisplay(d => d + label);
       }
     }
   }
-    /**
-   * Gives you a function that appends the given operator and the current displayed value to the history
-   * @param op operator as text for the button
-   * @returns a function that adds the label to the display
-   * @example
-   * operatorClickFor('+')() // add the current dislayed value and the oprator to the history
-   * @example
-   * { text: "+", fn: operatorClickFor("+"), type: ButtonType.OPERATOR },
-   */
+  /**
+ * Gives you a function that appends the given operator and the current displayed value to the history
+ * @param op operator as text for the button
+ * @returns a function that adds the label to the display
+ * @example
+ * operatorClickFor('+')() // add the current dislayed value and the oprator to the history
+ * @example
+ * { text: "+", fn: operatorClickFor("+"), type: ButtonType.OPERATOR },
+ */
   const operatorClickFor = (op: string) => {
     return () => {
       if (display === '') return;
@@ -197,14 +205,14 @@ function App() {
     [
       { text: "±", fn: plusMinusClick, type: ButtonType.OTHER },
       { text: "0", fn: addToDisplayClickFor("0"), type: ButtonType.NUMBER },
-      { text: ",", fn: addToDisplayClickFor("."), type: ButtonType.OTHER },
+      { text: ",", fn: commaClick, type: ButtonType.OTHER },
       { text: "=", fn: equalsClick, type: ButtonType.OPERATOR }
     ]
   ]
-/**
- * Handles the keydown event for the calculator.
- * @param event keydown event
- */
+  /**
+   * Handles the keydown event for the calculator.
+   * @param event keydown event
+   */
   const handleKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case '0':
@@ -217,11 +225,11 @@ function App() {
       case '7':
       case '8':
       case '9':
-      case '.':
         addToDisplayClickFor(event.key)();
         break;
+      case '.':
       case ',':
-        addToDisplayClickFor('.')();
+        commaClick();
         break;
       case '+':
       case '-':
@@ -261,7 +269,7 @@ function App() {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  },[handleKeyDown])
+  }, [handleKeyDown])
   /**
    * Draws all the buttons of the calculator.
    * @returns JSX.Elements from the buttons array
