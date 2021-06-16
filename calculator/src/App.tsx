@@ -68,7 +68,11 @@ function App() {
   }
   const plusMinusClick = () => {
     if (display.startsWith('-')) {
-      setDisplay(display.substr(1));
+      if(display.length>1) {
+        setDisplay(display.substr(1));
+      } else {
+        setDisplay("0");
+      }
     } else {
       if (display === '0') {
         setDisplay('-');
