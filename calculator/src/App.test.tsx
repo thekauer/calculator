@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('test layout', () => {
-  it('tests if layout is rendered properly', () => {
+  test('tests if layout is rendered properly', () => {
     const { container } = render(<App />);
     const grid = container.getElementsByClassName('grid');
     expect(grid.length).toBe(1);
@@ -15,7 +15,7 @@ describe('test layout', () => {
     const bottom = container.getElementsByClassName('bottom');
     expect(bottom.length).toBe(1);
   })
-  it('tests if leading zeros are removed', () => {
+  test('tests if leading zeros are removed', () => {
     const { container, getByText, getAllByText } = render(<App />);
     const top = container.getElementsByClassName('top')[0];
     const bottom = container.getElementsByClassName('bottom')[0];
@@ -31,8 +31,8 @@ describe('test layout', () => {
   })
 })
 
-describe('test addition', () => {
-  it('1+1', () => {
+describe('test operations', () => {
+  test('1+1', () => {
     const { container, getByText } = render(<App />);
     const top = container.getElementsByClassName('top')[0];
     const bottom = container.getElementsByClassName('bottom')[0];
@@ -51,7 +51,7 @@ describe('test addition', () => {
     expect(top.innerHTML).toBe(" ");
     expect(bottom.innerHTML).toBe('2');
   })
-  it('1+0', () => {
+  test('1+0', () => {
     const { container, getByText, getAllByText } = render(<App />);
     const top = container.getElementsByClassName('top')[0];
     const bottom = container.getElementsByClassName('bottom')[0];
@@ -66,11 +66,20 @@ describe('test addition', () => {
     eq.click();
     expect(bottom.innerHTML).toBe('1');
   })
-
-})
-
-describe('substraction', () => {
-  it('1-2-1', () => {
+  test('0+1', () => {
+    const { container, getByText, getAllByText } = render(<App />);
+    const bottom = container.getElementsByClassName('bottom')[0];
+    const one = getByText(/1/);
+    const add = getByText(/^\+$/);
+    const eq = getByText(/=/);
+    add.click();
+    expect(bottom.innerHTML).toBe('0');
+    one.click();
+    expect(bottom.innerHTML).toBe('1');
+    eq.click();
+    expect(bottom.innerHTML).toBe('1');
+  })
+  test('1-2-1', () => {
     const { container, getByText } = render(<App />);
     const top = container.getElementsByClassName('top')[0];
     const bottom = container.getElementsByClassName('bottom')[0];
@@ -94,6 +103,121 @@ describe('substraction', () => {
     eq.click();
     expect(top.innerHTML).toBe(" ");
     expect(bottom.innerHTML).toBe('-2');
+
+  })
+  test('2*3/2/0 3', () => {
+    const { container, getByText, getAllByText } = render(<App />);
+    const top = container.getElementsByClassName('top')[0];
+    const bottom = container.getElementsByClassName('bottom')[0];
+    const zero = container.querySelector('#button18');
+    const two = getByText(/2/);
+    const three = getByText(/3/);
+    const mul = getByText(/×/);
+    const div = getByText(/÷/);
+    const eq = getByText(/=/);
+    expect(zero).not.toBeNull();
+
+    two.click();
+    mul.click();
+    three.click();
+    eq.click();
+    expect(bottom.innerHTML).toBe('6');
+    expect(top.innerHTML).toBe(' ');
+    div.click();
+    two.click();
+    eq.click();
+    expect(bottom.innerHTML).toBe('3');
+    div.click();
+    zero?.click();
+    eq.click();
+    expect(bottom.innerHTML).toBe("Nem lehet 0-val osztani");
+    expect(top.innerHTML).toBe(' ');
+    three.click();
+    expect(bottom.innerHTML).toBe('3');
+    expect(top.innerHTML).toBe(' ');
+
+  })
+  test('1.5*2', () => {
+    const { container, getByText, getAllByText } = render(<App />);
+    const bottom = container.getElementsByClassName('bottom')[0];
+    const one = getByText(/1/);
+    const two = getByText(/2/);
+    const five = getByText(/5/);
+    const mul = getByText(/×/);
+    const comma = getByText(/,/);
+    const eq = getByText(/=/);
+
+    one.click();
+    comma.click();
+    comma.click();
+    five.click();
+    expect(bottom.innerHTML).toBe('1.5');
+    mul.click();
+    two.click();
+    eq.click();
+    expect(bottom.innerHTML).toBe('3');
+  })
+  test('1 C 1+2 C C', () => {
+    const { container, getByText, getAllByText } = render(<App />);
+    const top = container.getElementsByClassName('top')[0];
+    const bottom = container.getElementsByClassName('bottom')[0];
+    const one = getByText(/1/);
+    const two = getByText(/2/);
+    const C = getByText(/C/);
+    const add = getByText(/^\+$/);
+
+    one.click();
+
+    expect(bottom.innerHTML).toBe('1');
+
+    C.click();
+
+    expect(bottom.innerHTML).toBe('0');
+
+    one.click();
+    add.click()
+    two.click();
+
+    expect(bottom.innerHTML).toBe('2');
+
+    C.click();
+
+    expect(bottom.innerHTML).toBe('0');
+
+    C.click()
+
+    expect(top.innerHTML).toBe(' ');
+
+  })
+  test('± 12 C ± ± 12 ± 3 ±', () => {
+    const { container, getByText, getAllByText } = render(<App />);
+    const top = container.getElementsByClassName('top')[0];
+    const bottom = container.getElementsByClassName('bottom')[0];
+    const one = getByText(/1/);
+    const two = getByText(/2/);
+    const three = getByText(/3/);
+    const pm = getByText(/±/);
+    const C = getByText(/C/);
+
+    pm.click();
+    expect(bottom.innerHTML).toBe('-');
+    one.click();
+    C.click();
+    expect(bottom.innerHTML).toBe('0');
+    pm.click();
+    expect(bottom.innerHTML).toBe('-');
+    pm.click();
+    expect(bottom.innerHTML).toBe('0');
+    one.click();
+    expect(bottom.innerHTML).toBe('1');
+    two.click();
+    expect(bottom.innerHTML).toBe('12');
+    pm.click();
+    expect(bottom.innerHTML).toBe('-12');
+    three.click();
+    expect(bottom.innerHTML).toBe('-123');
+    pm.click();
+    expect(bottom.innerHTML).toBe('123');
 
   })
 })
