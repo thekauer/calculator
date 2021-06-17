@@ -12,9 +12,9 @@ const getRandomString = () => Math.random().toString(36).substr(2, 10);
  * @param {string} id id of the user
  * @param {number} number number to be saved
  */
-const saveNumber = (id,number) => {
+const saveNumber = (id, number) => {
     users.add(id);
-    fs.writeFileSync(dbPath+id,number.toString());
+    fs.writeFileSync(dbPath + id, number.toString());
 }
 /**
  * @returns a unique identifier for a user
@@ -24,7 +24,7 @@ const generateId = () => {
     do {
         id = getRandomString();
     }
-    while(users.has(id));
+    while (users.has(id));
     return id;
 }
 /**
@@ -33,12 +33,12 @@ const generateId = () => {
  * @returns the number of the user
  */
 const getNumberForId = (id) => {
-    const filename = dbPath+id;
-    if(fs.existsSync(filename)) {
+    const filename = dbPath + id;
+    if (fs.existsSync(filename)) {
         const text = fs.readFileSync(filename);
         const number = Number.parseInt(text);
         return number;
-    } 
+    }
     return undefined;
 }
 /**
@@ -54,13 +54,13 @@ const isUser = (id) => {
  */
 const initServer = () => {
     console.log('running on port 8080');
-    if(fs.existsSync(dbPath)) {
-        fs.rmdirSync(dbPath,{recursive:true});
+    if (fs.existsSync(dbPath)) {
+        fs.rmdirSync(dbPath, { recursive: true });
     }
     fs.mkdirSync(dbPath);
 }
 
-module.exports= {
+module.exports = {
     generateId,
     getNumberForId,
     saveNumber,

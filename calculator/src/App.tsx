@@ -11,7 +11,7 @@ enum ButtonType {
   NUMBER = 'number',
   OTHER = 'other'
 }
-function App() {
+export default function App() {
   const [equation, setEquation] = useState<Equation>({ rhs: "0" });
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
@@ -68,7 +68,7 @@ function App() {
       if (resp.status === 200) return json;
     }
     get().then(json => {
-      if (json!==undefined) {
+      if (json !== undefined) {
         setEquation(e => { return { ...e, rhs: json.number.toString() } });
         setId(json.id);
       }
@@ -80,7 +80,6 @@ function App() {
    */
   const storeInMemoryClick = () => {
     const post = async () => {
-      console.log({ id });
       const body = { number: equation.rhs, id: id };
       let resp = await fetch('/api/store', {
         method: 'POST', headers: {
@@ -193,7 +192,7 @@ function App() {
 
   const buttons = [
     [
-      { text: "M-", fn: popMemoryClick, type: ButtonType.OTHER },
+      { text: "MR", fn: popMemoryClick, type: ButtonType.OTHER },
       { text: "M+", fn: storeInMemoryClick, type: ButtonType.OTHER },
       { text: "C", fn: clearDisplayClick, type: ButtonType.OTHER },
       { text: "÷", fn: operatorClickFor("÷"), type: ButtonType.OPERATOR }
@@ -312,4 +311,3 @@ function App() {
   );
 }
 
-export default App;
