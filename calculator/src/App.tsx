@@ -18,7 +18,7 @@ export default function App() {
 
   const ERROR_MSG = "Nem lehet 0-val osztani";
   /**
-   * Evaluates the equation based on the display and the equation state
+   * Evaluates the equation based on  the equation state
    * @returns the result of the equation
    */
   const evalDisplay = () => {
@@ -52,7 +52,7 @@ export default function App() {
     }
   }
   /**
-   * Handler for the memory fetching of the calculator.
+   * Handler for the `MR` button. Fetches the stored number from the server.
    * Sends your id to the server through a POST request to the /api/pop endpoint, and receives the stored number.
    */
   const popMemoryClick = () => {
@@ -76,11 +76,11 @@ export default function App() {
     }).catch(_ => setId(''));
   }
   /**
-   * Handler for the memory storing of the calculator.
-   * Sends your a POST request to the /api/store endpoint, and receives the id used to fetch the number.
+   * Handler for the `M+` button. Store a number on the server.
+   * Sends a POST request to the /api/store endpoint, with your number, and you id (if you have one) and receives the id used to fetch the number from the server.
    */
   const storeInMemoryClick = () => {
-    if(equation.rhs === ERROR_MSG) return;
+    if (equation.rhs === ERROR_MSG) return;
     const post = async () => {
       const body = { number: equation.rhs, id: id };
       let resp = await fetch('/api/store', {
@@ -95,7 +95,7 @@ export default function App() {
     post();
   }
   /**
-   * Handles when the , button is clicked. Doesn't add a comma to the display if there is already one there.
+   * Handles when the `,` button is clicked. Doesn't add a comma to the display if there is already one there.
    */
   const commaClick = () => {
     const rhs = equation.rhs;
@@ -104,7 +104,7 @@ export default function App() {
     }
   }
   /**
-   * Handles the ± button. Inverts the sign of the displayed number.
+   * Handles the `±` button. Inverts the sign of the displayed number.
    */
   const plusMinusClick = () => {
     if (equation.rhs.startsWith('-')) {
@@ -124,7 +124,7 @@ export default function App() {
     }
   }
   /**
-   * Handles the C button. On first call clears the bottom part, and on the second call clears top too.
+   * Handles the `C` button. On first call clears the bottom part, and on the second call clears top too.
    */
   const clearDisplayClick = () => {
     if (equation.rhs === "0") {
@@ -134,7 +134,7 @@ export default function App() {
     }
   }
   /**
-   * Handles the = button. Evaluates the expression on the display if possible.
+   * Handles the `=` button. Evaluates the expression on the display if possible.
    * @returns if no value was supplied
    */
   const equalsClick = () => {
