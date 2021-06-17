@@ -10,7 +10,6 @@ app.use(bodyParser.json())
 
 
 app.post('/api/store', (req, res) => {
-    console.log(req.body);
     let { number, id } = req.body;
     if (!id) id = generateId();
     saveNumber(id, number);
@@ -19,7 +18,6 @@ app.post('/api/store', (req, res) => {
 
 app.post('/api/pop', async (req, res) => {
     const { id } = req.body;
-    console.log('pop', { id });
     if (!isUser(id)) res.status(400).send();
     const number = await getNumberForId(id);
     if (number !== undefined) {
