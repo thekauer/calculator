@@ -16,6 +16,7 @@ export default function App() {
   const [override, setOverride] = useState(true);
   const [id, setId] = useState("");
 
+  const ERROR_MSG = "Nem lehet 0-val osztani";
   /**
    * Evaluates the equation based on the display and the equation state
    * @returns the result of the equation
@@ -41,7 +42,7 @@ export default function App() {
           if (right !== 0) {
             result = left / right;
           } else {
-            setEquation({ rhs: "Nem lehet 0-val osztani" });
+            setEquation({ rhs: ERROR_MSG });
             setOverride(true);
             return;
           }
@@ -79,6 +80,7 @@ export default function App() {
    * Sends your a POST request to the /api/store endpoint, and receives the id used to fetch the number.
    */
   const storeInMemoryClick = () => {
+    if(equation.rhs === ERROR_MSG) return;
     const post = async () => {
       const body = { number: equation.rhs, id: id };
       let resp = await fetch('/api/store', {
