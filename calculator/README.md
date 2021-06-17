@@ -2,6 +2,7 @@
 
 ## Setup
 To get started run `yarn start` and `node server/index.js` commands.
+To test run `yarn test`.
 
 ## Buttons
  | button | shortcuts                    | function                                                                                 |
